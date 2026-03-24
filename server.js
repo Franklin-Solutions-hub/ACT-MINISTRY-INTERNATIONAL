@@ -131,7 +131,29 @@ app.get('/sermons', async (req, res) => {
   }
 });
 
-const PORT = процесс.env.PORT || 8080;
+// --- SERMON DETAILS PAGE ---
+app.get('/sermons/:id', async (req, res) => {
+  try {
+    const data = {};
+    const { data: settingsRows } = await supabase.from('settings').select('key, value');
+    data.settings = {};
+    (settingsRows || []).forEach(row => data.settings[row.key] = row.value);
+
+    // Fetch the specific sermon
+    const { data: sermons } = await supabase.from('sermons').select('*').eq('id', req.params.id).limit(1);
+    if (!sermons || sermons.length === 0) {
+      return res.status(404).send('Sermon not found');
+    }
+    data.sermon = sermons[0];
+
+    res.render('sermon-details', { data });
+  } catch (err) {
+    console.error('Sermon details page error:', err);
+    res.status(500).send('Database Error');
+  }
+});
+
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

@@ -116,10 +116,10 @@ async function initializeDatabase() {
     const { data: existingSermons } = await supabase.from('sermons').select('id').limit(1);
     if (!existingSermons || existingSermons.length === 0) {
       await supabase.from('sermons').insert([
-        { title: 'Sunday Worship Experience', description: 'Experience the power of God through our worship services.', video_url: '' },
-        { title: 'Prophetic Encounter Night', description: 'A night of divine encounters, prophecies, and deliverance.', video_url: '' },
-        { title: 'Word & Teaching Series', description: 'Deep study of scripture to equip the saints for every good work.', video_url: '' },
-        { title: 'Prayer & Deliverance Service', description: 'Breaking every chain and walking in the freedom of Christ.', video_url: '' }
+        { title: 'Sunday Worship Experience', description: 'Experience the power of God through our worship services.', video_url: '', category: 'Faith', is_featured: true, preacher: 'Prophet Samuel Eghan Gorman' },
+        { title: 'Prophetic Encounter Night', description: 'A night of divine encounters, prophecies, and deliverance.', video_url: '', category: 'Prophecy', preacher: 'Prophet Samuel Eghan Gorman' },
+        { title: 'Word & Teaching Series', description: 'Deep study of scripture to equip the saints for every good work.', video_url: '', category: 'Teaching', preacher: 'Prophet Samuel Eghan Gorman' },
+        { title: 'Prayer & Deliverance Service', description: 'Breaking every chain and walking in the freedom of Christ.', video_url: '', category: 'Prayer', preacher: 'Prophet Samuel Eghan Gorman' }
       ]);
       console.log('Default sermons seeded.');
     }

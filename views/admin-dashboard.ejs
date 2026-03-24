@@ -375,95 +375,206 @@
       <!-- SERMONS TAB -->
       <section id="sermons" class="tab-content">
         <div class="card">
-          <h3>Add Sermon</h3>
+          <h3>Add New Sermon</h3>
           <form action="/admin/sermons" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-              <label>Sermon Title</label>
-              <input type="text" name="title" required>
-            </div>
-            
-            <div class="form-group">
-              <label>Direct Video Upload (Drag & Drop .mp4, .webm)</label>
-              <div class="drag-drop-zone" id="sermonDropZone" onclick="document.getElementById('sermonFileInput').click()">
-                <i class='bx bx-cloud-upload'></i>
-                <p>Drag & Drop a video file here or click to browse</p>
-                <input type="file" name="sermon_video" id="sermonFileInput" accept="video/*" style="display: none;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>Sermon Title *</label>
+                <input type="text" name="title" required>
               </div>
-              <div id="sermonFilePreview" style="margin-top:10px; font-weight:bold; color:var(--deep-blue);"></div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>Preacher Name</label>
+                <input type="text" name="preacher" placeholder="e.g. Prophet Samuel Eghan Gorman">
+              </div>
             </div>
 
-            <div style="text-align: center; margin: 10px 0; font-weight: bold; color: var(--gray);">— OR —</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>Category</label>
+                <select name="category" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:4px;">
+                  <option value="Faith">Faith</option>
+                  <option value="Healing">Healing</option>
+                  <option value="Prayer">Prayer</option>
+                  <option value="Praise">Praise</option>
+                  <option value="Prophecy">Prophecy</option>
+                  <option value="Teaching">Teaching</option>
+                  <option value="General" selected>General</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>Date Preached</label>
+                <input type="date" name="date_preached">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label style="display:block;">Featured Sermon?</label>
+                <label class="toggle-switch" style="display:inline-block; margin-top:5px;">
+                  <input type="checkbox" name="is_featured">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
 
             <div class="form-group">
-              <label>YouTube Video Embed URL</label>
-              <input type="text" name="video_url" placeholder="e.g. https://www.youtube.com/embed/...">
-              <small style="color: grey;">If you upload a file above, this link will be ignored.</small>
+              <label>Scripture Reference</label>
+              <input type="text" name="scripture" placeholder="e.g. John 3:16, Romans 8:28">
+            </div>
+
+            <div class="form-group">
+              <label>Description *</label>
+              <textarea name="description" rows="3" required></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+              <!-- Thumbnail -->
+              <div class="drag-drop-zone" onclick="document.getElementById('sermonThumbInput').click()" style="min-height:100px; padding:15px; border-color:var(--magenta);">
+                <i class='bx bx-image-add' style="font-size: 2rem; margin-bottom: 5px;"></i>
+                <p style="font-size:0.85rem; margin:0;">Thumbnail Image (Optional)</p>
+                <input type="file" name="thumbnail" id="sermonThumbInput" accept="image/*" style="display: none;" onchange="this.previousElementSibling.innerHTML = '<span style=\'color:green;\'>Selected: ' + this.files[0].name + '</span>'">
+              </div>
+
+              <!-- Audio -->
+              <div class="drag-drop-zone" onclick="document.getElementById('sermonAudioInput').click()" style="min-height:100px; padding:15px; border-color:var(--deep-blue);">
+                <i class='bx bx-microphone' style="font-size: 2rem; margin-bottom: 5px;"></i>
+                <p style="font-size:0.85rem; margin:0;">Audio File (Optional)</p>
+                <input type="file" name="sermon_audio" id="sermonAudioInput" accept="audio/*" style="display: none;" onchange="this.previousElementSibling.innerHTML = '<span style=\'color:green;\'>Selected: ' + this.files[0].name + '</span>'">
+              </div>
+
+              <!-- Video -->
+              <div class="drag-drop-zone" onclick="document.getElementById('sermonVideoInput').click()" style="min-height:100px; padding:15px; border-color:var(--gold);">
+                <i class='bx bx-video-plus' style="font-size: 2rem; margin-bottom: 5px;"></i>
+                <p style="font-size:0.85rem; margin:0;">Video File (.mp4)</p>
+                <input type="file" name="sermon_video" id="sermonVideoInput" accept="video/*" style="display: none;" onchange="this.previousElementSibling.innerHTML = '<span style=\'color:green;\'>Selected: ' + this.files[0].name + '</span>'">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>— OR — YouTube Embed URL (Overrides video upload)</label>
+              <input type="url" name="video_url" placeholder="e.g. https://www.youtube.com/embed/...">
             </div>
             
-            <div class="form-group">
-              <label>Description</label>
-              <textarea name="description" rows="2" required></textarea>
-            </div>
-            <button type="submit" class="btn-save">Add Sermon</button>
+            <button type="submit" class="btn-save" style="font-size: 1.1rem; padding: 12px;"><i class='bx bx-plus-circle'></i> Add Sermon to Library</button>
           </form>
         </div>
 
         <div class="card">
-          <h3>Current Sermons</h3>
-          <table class="data-table">
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Video Source</th>
-              <th>Action</th>
-            </tr>
-            <% data.sermons.forEach(sermon => { %>
-            <tr>
-              <td><strong><%= sermon.title %></strong></td>
-              <td><%= sermon.description %></td>
-              <td>
-                <% if(sermon.video_url && sermon.video_url.startsWith('/images/')) { %>
-                  <span style="color: green;"><i class='bx bx-check-circle'></i> Uploaded Video</span>
-                <% } else if(sermon.video_url) { %>
-                  <a href="<%= sermon.video_url %>" target="_blank">YouTube Link</a>
-                <% } else { %>
-                  <em>None</em>
-                <% } %>
-              </td>
-              <td>
-                <button class="btn-save" style="padding: 6px 12px; font-size: 0.8rem; margin-right: 5px;" onclick="document.getElementById('edit-sermon-<%= sermon.id %>').style.display='table-row'">Edit</button>
-                <form action="/admin/sermons/delete/<%= sermon.id %>" method="POST" style="display:inline;">
-                  <button type="submit" class="btn-delete" onclick="return confirm('Are you sure?')">Delete</button>
-                </form>
-              </td>
-            </tr>
-            <!-- Hidden Edit Row -->
-            <tr id="edit-sermon-<%= sermon.id %>" style="display:none; background: #f9f9f9;">
-              <td colspan="4">
-                <form action="/admin/sermons/edit/<%= sermon.id %>" method="POST" enctype="multipart/form-data" style="padding: 10px;">
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                    <input type="text" name="title" value="<%= sermon.title %>" style="padding:8px;" required>
-                    <input type="text" name="video_url" value="<%= sermon.video_url %>" style="padding:8px;" placeholder="YouTube Link (leave empty to keep upload)">
-                  </div>
-                  <div style="margin-bottom: 10px;">
-                    <textarea name="description" rows="2" style="width:100%; padding:8px;" required><%= sermon.description %></textarea>
-                  </div>
-                  <div style="display: flex; gap: 10px; align-items: center;">
-                    <div class="drag-drop-zone" style="padding: 10px; min-height: auto; flex: 1; border: 1px dashed var(--deep-blue); cursor: pointer; text-align: center; border-radius: 4px; background: white;" onclick="document.getElementById('sermonEditInput-<%= sermon.id %>').click()" ondragover="event.preventDefault(); this.style.background='#f0f4f8';" ondrop="event.preventDefault(); this.style.background='white'; const file = event.dataTransfer.files[0]; if(file) { document.getElementById('sermonEditInput-<%= sermon.id %>').files = event.dataTransfer.files; this.querySelector('span').textContent = 'Selected: ' + file.name; }">
-                      <i class='bx bx-cloud-upload' style="font-size: 1.2rem; margin-bottom:0;"></i> 
-                      <span style="font-size: 0.8rem; font-weight: 600;">Drag & Drop or Click to Upload Video</span>
-                      <input type="file" name="sermon_video" id="sermonEditInput-<%= sermon.id %>" accept="video/*" style="display:none;" onchange="this.parentElement.querySelector('span').textContent = 'Selected: ' + this.files[0].name;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0;">Sermons Library</h3>
+            <div style="position: relative;">
+              <i class='bx bx-search' style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--gray);"></i>
+              <input type="text" id="adminSermonSearch" placeholder="Search sermons..." style="padding: 8px 10px 8px 30px; border: 1px solid #ddd; border-radius: 4px; width: 250px;" onkeyup="filterAdminSermons()">
+            </div>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="data-table" id="adminSermonsTable">
+              <tr>
+                <th style="width: 80px;">Media</th>
+                <th>Details</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Featured</th>
+                <th style="width: 150px;">Action</th>
+              </tr>
+              <% data.sermons.forEach(sermon => { %>
+              <tr class="sermon-row">
+                <td>
+                  <% if(sermon.thumbnail_url) { %>
+                    <img src="<%= sermon.thumbnail_url %>" alt="Thumb" style="width: 60px; height: 40px; object-fit: cover; border-radius: 4px;">
+                  <% } else { %>
+                    <div style="width: 60px; height: 40px; background: #eee; border-radius: 4px; display: flex; align-items: center; justify-content: center;"><i class='bx bx-video'></i></div>
+                  <% } %>
+                </td>
+                <td>
+                  <strong class="s-title"><%= sermon.title %></strong><br>
+                  <span style="font-size: 0.8rem; color: #666;"><i class='bx bx-user'></i> <%= sermon.preacher || 'Unknown' %></span>
+                </td>
+                <td><span class="badge" style="background: var(--light-bg); color: var(--deep-blue); padding: 4px 8px; border-radius: 12px; font-size: 0.8rem;"><%= sermon.category %></span></td>
+                <td><%= sermon.date_preached ? new Date(sermon.date_preached).toLocaleDateString() : 'N/A' %></td>
+                <td>
+                  <% if(sermon.is_featured) { %>
+                    <i class='bx bxs-star' style="color: gold; font-size: 1.2rem;" title="Featured"></i>
+                  <% } else { %>
+                    <i class='bx bx-star' style="color: #ccc; font-size: 1.2rem;"></i>
+                  <% } %>
+                </td>
+                <td>
+                  <button class="btn-save" style="padding: 6px 10px; font-size: 0.8rem;" onclick="document.getElementById('edit-sermon-<%= sermon.id %>').style.display='table-row'"><i class='bx bx-edit'></i> Edit</button>
+                  <form action="/admin/sermons/delete/<%= sermon.id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn-delete" style="padding: 6px 10px; font-size: 0.8rem;" onclick="return confirm('Delete this sermon?')"><i class='bx bx-trash'></i></button>
+                  </form>
+                </td>
+              </tr>
+
+              <!-- Inline Edit Row -->
+              <tr id="edit-sermon-<%= sermon.id %>" style="display:none; background: #f8fbff;">
+                <td colspan="6" style="padding: 15px; border: 1px solid var(--deep-blue);">
+                  <form action="/admin/sermons/edit/<%= sermon.id %>" method="POST" enctype="multipart/form-data">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
+                      <h4 style="margin:0; color:var(--deep-blue);">Edit Sermon</h4>
+                      <i class='bx bx-x' style="cursor:pointer; font-size:1.5rem;" onclick="document.getElementById('edit-sermon-<%= sermon.id %>').style.display='none'"></i>
                     </div>
-                    <button type="submit" class="btn-save" style="padding: 6px 16px; font-weight: 600;">Save</button>
-                    <button type="button" class="btn-delete" style="padding: 6px 16px;" onclick="document.getElementById('edit-sermon-<%= sermon.id %>').style.display='none'">Cancel</button>
-                  </div>
-                </form>
-              </td>
-            </tr>
-            <% }) %>
-          </table>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                      <input type="text" name="title" value="<%= sermon.title %>" style="padding:8px;" required>
+                      <input type="text" name="preacher" value="<%= sermon.preacher %>" style="padding:8px;" placeholder="Preacher">
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                      <select name="category" style="padding:8px;">
+                        <option value="Faith" <%= sermon.category==='Faith'?'selected':'' %>>Faith</option>
+                        <option value="Healing" <%= sermon.category==='Healing'?'selected':'' %>>Healing</option>
+                        <option value="Prayer" <%= sermon.category==='Prayer'?'selected':'' %>>Prayer</option>
+                        <option value="Praise" <%= sermon.category==='Praise'?'selected':'' %>>Praise</option>
+                        <option value="Prophecy" <%= sermon.category==='Prophecy'?'selected':'' %>>Prophecy</option>
+                        <option value="Teaching" <%= sermon.category==='Teaching'?'selected':'' %>>Teaching</option>
+                        <option value="General" <%= sermon.category==='General'?'selected':'' %>>General</option>
+                      </select>
+                      <input type="text" name="scripture" value="<%= sermon.scripture %>" style="padding:8px;" placeholder="Scripture">
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <input type="date" name="date_preached" value="<%= sermon.date_preached ? sermon.date_preached.split('T')[0] : '' %>" style="padding:8px; flex:1;">
+                        <label style="font-size:0.8rem; display:flex; align-items:center; gap:5px;"><input type="checkbox" name="is_featured" <%= sermon.is_featured ? 'checked' : '' %>> Featured</label>
+                      </div>
+                    </div>
+
+                    <textarea name="description" rows="2" style="width:100%; padding:8px; margin-bottom:10px;" required><%= sermon.description %></textarea>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                      <input type="url" name="video_url" value="<%= sermon.video_url %>" style="padding:8px;" placeholder="YouTube Link (leave empty to keep upload)">
+                      <div style="display:flex; gap:10px;">
+                        <label style="font-size:0.8rem; flex:1; background:white; border:1px dashed #ccc; padding:5px; text-align:center; cursor:pointer;" title="Replace Thumbnail">
+                          <i class='bx bx-image'></i> Thumb <input type="file" name="thumbnail" accept="image/*" style="display:none;" onchange="this.parentElement.style.borderColor='green'">
+                        </label>
+                        <label style="font-size:0.8rem; flex:1; background:white; border:1px dashed #ccc; padding:5px; text-align:center; cursor:pointer;" title="Replace Video">
+                          <i class='bx bx-video'></i> Video <input type="file" name="sermon_video" accept="video/*" style="display:none;" onchange="this.parentElement.style.borderColor='green'">
+                        </label>
+                        <label style="font-size:0.8rem; flex:1; background:white; border:1px dashed #ccc; padding:5px; text-align:center; cursor:pointer;" title="Replace Audio">
+                          <i class='bx bx-microphone'></i> Audio <input type="file" name="sermon_audio" accept="audio/*" style="display:none;" onchange="this.parentElement.style.borderColor='green'">
+                        </label>
+                      </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                      <button type="submit" class="btn-save" style="padding: 6px 16px;">Save Changes</button>
+                    </div>
+                  </form>
+                </td>
+              </tr>
+              <% }) %>
+            </table>
+          </div>
         </div>
       </section>
+      
+      <script>
+        function filterAdminSermons() {
+          const query = document.getElementById('adminSermonSearch').value.toLowerCase();
+          const rows = document.querySelectorAll('#adminSermonsTable .sermon-row');
+          rows.forEach(row => {
+            const title = row.querySelector('.s-title').textContent.toLowerCase();
+            row.style.display = title.includes(query) ? '' : 'none';
+          });
+        }
+      </script>
 
       <!-- MESSAGES TAB -->
       <section id="messages" class="tab-content">

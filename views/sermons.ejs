@@ -50,42 +50,159 @@
     <div class="leadership-hero-overlay"></div>
     <div class="container" style="position: relative; z-index: 2; text-align: center;">
       <p class="section-subtitle reveal" style="color: var(--gold-light);">Sermons & Messages</p>
-      <h1 class="reveal" style="color: var(--white); font-size: clamp(2.5rem, 5vw, 4rem); font-family: var(--font-heading); margin-bottom: 15px;">Watch & Be Blessed</h1>
-      <p class="reveal" style="color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6;">
-        Experience the power of God through our documented worship services, prophetic encounters, and divine teachings.
-      </p>
-    </div>
-  </section>
-
-  <!-- ====== SERMONS GRID ====== -->
-  <section class="sermons-section section" style="padding-top: 60px;">
-    <div class="container">
-      <div class="sermons-grid">
-        <% data.sermons.forEach(sermon => { %>
-        <div class="sermon-card reveal">
-          <div class="sermon-video">
-            <% if(sermon.video_url && sermon.video_url.startsWith('/images/')) { %>
-              <!-- Native Video Player for Direct Uploads -->
-              <video src="<%= encodeURI(sermon.video_url) %>" controls preload="metadata"></video>
-            <% } else if(sermon.video_url) { %>
-              <!-- YouTube Embed -->
-              <iframe src="<%= sermon.video_url %>" allowfullscreen></iframe>
-            <% } else { %>
-              <div class="sermon-placeholder">
-                <div class="sermon-placeholder-icon"><i class='bx bx-play'></i></div>
-                <p>Coming Soon</p>
-              </div>
-            <% } %>
-          </div>
-          <div class="sermon-info">
-            <h3><%= sermon.title %></h3>
-            <p><%= sermon.description %></p>
-          </div>
-        </div>
-        <% }) %>
+      <h1 class="reveal" style="color: var(--white); font-size: clamp(2.5rem, 5vw, 4rem); font-family: var(--font-heading); margin-bottom: 25px;">Watch & Be Blessed</h1>
+      
+      <!-- HERO SEARCH BAR -->
+      <div class="sermon-search-container reveal" style="max-width: 600px; margin: 0 auto; position: relative;">
+        <i class='bx bx-search' style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; color: var(--deep-blue); z-index: 10;"></i>
+        <input type="text" id="sermonSearchInput" placeholder="Search sermons by title or topic..." style="width: 100%; padding: 18px 20px 18px 60px; border-radius: 30px; border: none; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); outline: none; transition: transform 0.3s ease;" onfocus="this.style.transform='scale(1.02)'" onblur="this.style.transform='scale(1)'" onkeyup="filterSermons()">
       </div>
     </div>
   </section>
+
+  <!-- ====== FEATURED SERMON ====== -->
+  <% const featuredSermon = data.sermons.find(s => s.is_featured); %>
+  <% if(featuredSermon) { %>
+  <section class="featured-sermon section" style="background: var(--light-bg); padding-bottom: 40px; border-bottom: 1px solid #eaeaea;">
+    <div class="container">
+      <div class="section-header reveal" style="text-align: left; margin-bottom: 30px;">
+        <p class="section-subtitle" style="margin-bottom: 5px;">Must Watch</p>
+        <h2 class="section-title">Featured Message</h2>
+      </div>
+      <div class="featured-sermon-card reveal" style="display: flex; flex-wrap: wrap; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.08);">
+        <div class="featured-media" style="flex: 1; min-width: 300px; position: relative; min-height: 350px;">
+          <% if(featuredSermon.thumbnail_url) { %>
+            <img src="<%= featuredSermon.thumbnail_url %>" alt="<%= featuredSermon.title %>" style="width: 100%; height: 100%; object-fit: cover;">
+            <a href="/sermons/<%= featuredSermon.id %>" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(30,30,100,0.85); color: white; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; transition: transform 0.3s ease, background 0.3s ease;" onmouseover="this.style.transform='translate(-50%, -50%) scale(1.1)'; this.style.background='var(--magenta)';" onmouseout="this.style.transform='translate(-50%, -50%) scale(1)'; this.style.background='rgba(30,30,100,0.85)';"><i class='bx bx-play'></i></a>
+          <% } else { %>
+            <!-- Fallback -->
+            <div style="width:100%; height:100%; background:var(--deep-blue); display:flex; align-items:center; justify-content:center; color:white;">
+              <a href="/sermons/<%= featuredSermon.id %>" style="color:white; font-size:4rem; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.1)'; this.style.color='var(--magenta)';" onmouseout="this.style.transform='scale(1)'; this.style.color='white';"><i class='bx bx-play-circle'></i></a>
+            </div>
+          <% } %>
+        </div>
+        <div class="featured-content" style="flex: 1; min-width: 300px; padding: 50px 40px; display: flex; flex-direction: column; justify-content: center;">
+          <div style="display:flex; justify-content:space-between; margin-bottom: 15px; align-items: center;">
+            <span style="background: rgba(214, 51, 132, 0.1); color: var(--magenta); padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;"><%= featuredSermon.category || 'General' %></span>
+            <span style="color: var(--gray); font-size: 0.9rem; font-weight: 500;"><i class='bx bx-calendar'></i> <%= featuredSermon.date_preached ? new Date(featuredSermon.date_preached).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) : 'Recent' %></span>
+          </div>
+          <h3 style="font-family: var(--font-heading); font-size: clamp(1.8rem, 3vw, 2.5rem); color: var(--deep-blue); margin-bottom: 15px; line-height: 1.2;"><%= featuredSermon.title %></h3>
+          <p style="color: var(--dark); font-weight: 600; font-size: 1.1rem; margin-bottom: 15px;"><i class='bx bx-user' style="color: var(--magenta);"></i> <%= featuredSermon.preacher %></p>
+          <p style="color: var(--gray); margin-bottom: 30px; line-height: 1.7; font-size: 1.05rem;"><%= featuredSermon.description %></p>
+          <div>
+            <a href="/sermons/<%= featuredSermon.id %>" class="btn" style="padding: 12px 30px; font-size: 1.1rem; border-radius: 30px;"><i class='bx bx-play-circle'></i> Watch Message</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <% } %>
+
+  <!-- ====== SERMONS LIBRARY / GRID ====== -->
+  <section class="sermons-library section" style="padding-top: <%= featuredSermon ? '60px' : '80px' %>;">
+    <div class="container">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 40px; gap: 15px;">
+        <h2 style="font-family: var(--font-heading); color: var(--deep-blue); font-size: 2.2rem; margin: 0;">Sermon Library</h2>
+        
+        <div class="sermon-filters" style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <select id="catFilter" onchange="filterSermons()" style="padding: 12px 20px; border-radius: 30px; border: 2px solid #eaeaea; outline: none; font-family: inherit; font-weight: 500; color: var(--deep-blue); cursor: pointer; background: white; transition: border-color 0.3s ease;" onmouseover="this.style.borderColor='var(--magenta)'" onmouseout="this.style.border='2px solid #eaeaea'">
+            <option value="All">All Categories</option>
+            <option value="Faith">Faith</option>
+            <option value="Healing">Healing</option>
+            <option value="Prayer">Prayer</option>
+            <option value="Praise">Praise</option>
+            <option value="Prophecy">Prophecy</option>
+            <option value="Teaching">Teaching</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ====== SERMONS GRID ====== -->
+      <div class="sermon-premium-grid" id="sermonsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px;">
+        <% data.sermons.forEach(sermon => { %>
+        <div class="sermon-premium-card reveal" data-title="<%= sermon.title.toLowerCase() %>" data-preacher="<%= (sermon.preacher||'').toLowerCase() %>" data-category="<%= sermon.category || 'General' %>">
+          <a href="/sermons/<%= sermon.id %>" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; border-radius: 12px; border: 1px solid #eaeaea; background: white; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+            
+            <div class="s-card-thumb" style="position: relative; height: 220px; border-radius: 12px 12px 0 0; overflow: hidden; background: var(--deep-blue);">
+              <% if(sermon.thumbnail_url) { %>
+                <img class="s-card-img" src="<%= sermon.thumbnail_url %>" alt="<%= sermon.title %>" style="width:100%; height:100%; object-fit:cover; transition: transform 0.6s ease;">
+              <% } else { %>
+                <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white;"><i class='bx bx-video' style="font-size:4rem; opacity: 0.5;"></i></div>
+              <% } %>
+              
+              <div class="s-card-overlay" style="position: absolute; inset:0; background: rgba(30,30,100,0.5); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
+                <i class='bx bx-play-circle' style="font-size: 4rem; color: white;"></i>
+              </div>
+              
+              <div style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.5px;">
+                <%= sermon.category || 'General' %>
+              </div>
+            </div>
+            
+            <div class="s-card-content" style="padding: 25px; flex: 1; display: flex; flex-direction: column;">
+              <h3 style="font-family: var(--font-heading); font-size: 1.35rem; color: var(--deep-blue); margin-bottom: 12px; line-height: 1.4;"><%= sermon.title %></h3>
+              <p style="color: var(--magenta); font-size: 0.95rem; margin-bottom: 15px; font-weight: 600;"><i class='bx bx-user' style="margin-right: 5px;"></i> <%= sermon.preacher || 'Prophet Samuel Eghan Gorman' %></p>
+              
+              <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid #eaeaea; display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: var(--gray); font-size: 0.85rem; font-weight: 500;"><i class='bx bx-calendar' style="margin-right: 5px;"></i> <%= sermon.date_preached ? new Date(sermon.date_preached).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) : 'Recent' %></span>
+                <span style="color: var(--deep-blue); font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 5px;">Watch <i class='bx bx-right-arrow-alt'></i></span>
+              </div>
+            </div>
+          </a>
+        </div>
+        <% }) %>
+      </div>
+
+      <div id="noSermonsMsg" style="display: none; text-align: center; padding: 80px 0; color: var(--gray);">
+        <i class='bx bx-search' style="font-size: 5rem; color: #eaeaea; margin-bottom: 20px;"></i>
+        <h3 style="font-family: var(--font-heading); color: var(--deep-blue); font-size: 1.8rem; margin-bottom: 10px;">No Results Found</h3>
+        <p style="font-size: 1.1rem;">Try adjusting your search criteria or selecting a different category.</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function filterSermons() {
+      const searchInput = document.getElementById('sermonSearchInput');
+      const query = searchInput ? searchInput.value.toLowerCase() : '';
+      const category = document.getElementById('catFilter').value;
+      const cards = document.querySelectorAll('.sermon-premium-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const title = card.getAttribute('data-title');
+        const preacher = card.getAttribute('data-preacher');
+        const cardCat = card.getAttribute('data-category');
+        
+        const matchesSearch = title.includes(query) || preacher.includes(query);
+        const matchesCat = category === 'All' || cardCat === category;
+
+        if (matchesSearch && matchesCat) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      document.getElementById('noSermonsMsg').style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // Hover effects for thumbnails
+    document.querySelectorAll('.sermon-premium-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        const img = card.querySelector('.s-card-img');
+        if(img) img.style.transform = 'scale(1.08)';
+        card.querySelector('.s-card-overlay').style.opacity = '1';
+      });
+      card.addEventListener('mouseleave', () => {
+        const img = card.querySelector('.s-card-img');
+        if(img) img.style.transform = 'scale(1)';
+        card.querySelector('.s-card-overlay').style.opacity = '0';
+      });
+    });
+  </script>
 
   <!-- ====== FOOTER ====== -->
   <footer class="footer" id="footer">

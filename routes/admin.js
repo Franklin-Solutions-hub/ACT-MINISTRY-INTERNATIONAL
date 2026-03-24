@@ -151,39 +151,74 @@ module.exports = function(upload) {
     res.redirect('/admin?msg=Ministry Deleted');
   });
 
-  // --- SERMONS ---
-  router.post('/sermons', isAuthenticated, upload.single('sermon_video'), async (req, res) => {
-    const { title, description } = req.body || {};
-    let video_url = (req.body && req.body.video_url) ? req.body.video_url : '';
+  const sermonUploadFields = upload.fields([
+    { name: 'thumbnail', maxCount: 1 },
+    { name: 'sermon_video', maxCount: 1 },
+    { name: 'sermon_audio', maxCount: 1 }
+  ]);
 
-    if (req.file) {
-      video_url = '/images/' + req.file.filename;
+  router.post('/sermons', isAuthenticated, sermonUploadFields, async (req, res) => {
+    const { title, description, preacher, category, scripture, date_preached, is_featured } = req.body || {};
+    let video_url = (req.body && req.body.video_url) ? req.body.video_url : '';
+    let thumbnail_url = '';
+    let audio_url = '';
+
+    if (req.files) {
+      if (req.files.sermon_video) video_url = '/images/' + req.files.sermon_video[0].filename;
+      if (req.files.thumbnail) thumbnail_url = '/images/' + req.files.thumbnail[0].filename;
+      if (req.files.sermon_audio) audio_url = '/images/' + req.files.sermon_audio[0].filename;
     }
 
-    await supabase.from('sermons').insert({ title, description, video_url });
+    const sermonDate = date_preached || new Date().toISOString().split('T')[0];
+
+    await supabase.from('sermons').insert({ 
+      title, description, video_url, 
+      preacher: preacher || '', 
+      category: category || 'General', 
+      scripture: scripture || '', 
+      thumbnail_url, audio_url,
+      date_preached: sermonDate,
+      is_featured: is_featured === 'on'
+    });
     res.redirect('/admin?msg=Sermon Added');
   });
 
-  router.post('/sermons/edit/:id', isAuthenticated, upload.single('sermon_video'), async (req, res) => {
-    const { title, description, video_url } = req.body || {};
-    const updateData = { title, description };
-    if (req.file) {
-      updateData.video_url = '/images/' + req.file.filename;
-    } else if (video_url !== undefined) {
-      updateData.video_url = video_url;
+  router.post('/sermons/edit/:id', isAuthenticated, sermonUploadFields, async (req, res) => {
+    const { title, description, video_url, preacher, category, scripture, date_preached, is_featured } = req.body || {};
+    const updateData = { 
+      title, description, preacher, category, scripture, 
+      is_featured: is_featured === 'on' 
+    };
+    if (date_preached) updateData.date_preached = date_preached;
+
+    if (req.files) {
+      if (req.files.sermon_video) updateData.video_url = '/images/' + req.files.sermon_video[0].filename;
+      if (req.files.thumbnail) updateData.thumbnail_url = '/images/' + req.files.thumbnail[0].filename;
+      if (req.files.sermon_audio) updateData.audio_url = '/images/' + req.files.sermon_audio[0].filename;
+    } 
+    
+    // Fallback for YouTube links directly submitted instead of file
+    if (!req.files || !req.files.sermon_video) {
+        if (video_url !== undefined) updateData.video_url = video_url;
     }
+
     await supabase.from('sermons').update(updateData).eq('id', req.params.id);
     res.redirect('/admin?msg=Sermon Updated');
   });
 
   router.post('/sermons/delete/:id', isAuthenticated, async (req, res) => {
-    // Check if there is an associated local video file to delete
-    const { data: rows } = await supabase.from('sermons').select('video_url').eq('id', req.params.id).limit(1);
-    if (rows && rows.length > 0 && rows[0].video_url && rows[0].video_url.startsWith('/images/')) {
-      const filePath = path.join(__dirname, '../public', rows[0].video_url);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
+    // Check local files to delete
+    const { data: rows } = await supabase.from('sermons').select('video_url, thumbnail_url, audio_url').eq('id', req.params.id).limit(1);
+    if (rows && rows.length > 0) {
+      const urls = [rows[0].video_url, rows[0].thumbnail_url, rows[0].audio_url];
+      urls.forEach(url => {
+        if (url && url.startsWith('/images/')) {
+          const filePath = path.join(__dirname, '../public', url);
+          if (fs.existsSync(filePath)) {
+            try { fs.unlinkSync(filePath); } catch (e) { console.error('Delete error:', e); }
+          }
+        }
+      });
     }
     await supabase.from('sermons').delete().eq('id', req.params.id);
     res.redirect('/admin?msg=Sermon Deleted');
