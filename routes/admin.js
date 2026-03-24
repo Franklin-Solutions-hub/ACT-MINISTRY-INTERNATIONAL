@@ -170,6 +170,24 @@ module.exports = function(upload) {
     }
   });
 
+  router.post('/gallery/edit/:id', isAuthenticated, upload.single('image'), async (req, res) => {
+    const caption = req.body.caption || '';
+    const updateData = { caption };
+    if (req.file) {
+      // Find old image to delete
+      const { data: rows } = await supabase.from('gallery').select('image_url').eq('id', req.params.id).limit(1);
+      if (rows && rows.length > 0 && rows[0].image_url && rows[0].image_url.startsWith('/images/')) {
+        const oldPath = path.join(__dirname, '../public', rows[0].image_url);
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+      }
+      updateData.image_url = '/images/' + req.file.filename;
+    }
+    await supabase.from('gallery').update(updateData).eq('id', req.params.id);
+    res.redirect('/admin?msg=Media Updated');
+  });
+
   router.post('/gallery/delete/:id', isAuthenticated, async (req, res) => {
     const { data: rows } = await supabase.from('gallery').select('image_url').eq('id', req.params.id).limit(1);
     if (rows && rows.length > 0 && rows[0].image_url) {
