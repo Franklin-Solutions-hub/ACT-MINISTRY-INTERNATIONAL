@@ -207,8 +207,8 @@ ul { list-style: none; }
 }
 .navbar.scrolled {
   background: rgba(10, 22, 40, 0.95);
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   padding: 10px 0;
   box-shadow: 0 2px 30px rgba(0,0,0,0.3);
 }
