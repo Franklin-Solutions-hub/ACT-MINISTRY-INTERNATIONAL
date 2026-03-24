@@ -185,7 +185,7 @@
           <div class="sermon-video">
             <% if(sermon.video_url && sermon.video_url.startsWith('/images/')) { %>
               <!-- Native Video Player for Direct Uploads -->
-              <video src="<%= sermon.video_url %>" controls></video>
+              <video src="<%= encodeURI(sermon.video_url) %>" controls preload="metadata"></video>
             <% } else if(sermon.video_url) { %>
               <!-- YouTube Embed -->
               <iframe src="<%= sermon.video_url %>" allowfullscreen></iframe>

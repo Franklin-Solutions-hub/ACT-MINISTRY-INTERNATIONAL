@@ -390,12 +390,23 @@
             <!-- Hidden Edit Row -->
             <tr id="edit-sermon-<%= sermon.id %>" style="display:none; background: #f9f9f9;">
               <td colspan="4">
-                <form action="/admin/sermons/edit/<%= sermon.id %>" method="POST" style="display:flex; gap: 10px; align-items:center;">
-                  <input type="text" name="title" value="<%= sermon.title %>" style="padding:5px; flex:1;" required>
-                  <input type="text" name="description" value="<%= sermon.description %>" style="padding:5px; flex:2;" required>
-                  <input type="text" name="video_url" value="<%= sermon.video_url %>" style="padding:5px; flex:1;" placeholder="YouTube Link">
-                  <button type="submit" class="btn-save" style="padding: 6px 12px; font-size: 0.8rem;">Save</button>
-                  <button type="button" class="btn-delete" style="padding: 6px 12px; font-size: 0.8rem;" onclick="document.getElementById('edit-sermon-<%= sermon.id %>').style.display='none'">Cancel</button>
+                <form action="/admin/sermons/edit/<%= sermon.id %>" method="POST" enctype="multipart/form-data" style="padding: 10px;">
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <input type="text" name="title" value="<%= sermon.title %>" style="padding:8px;" required>
+                    <input type="text" name="video_url" value="<%= sermon.video_url %>" style="padding:8px;" placeholder="YouTube Link (leave empty to keep upload)">
+                  </div>
+                  <div style="margin-bottom: 10px;">
+                    <textarea name="description" rows="2" style="width:100%; padding:8px;" required><%= sermon.description %></textarea>
+                  </div>
+                  <div style="display: flex; gap: 10px; align-items: center;">
+                    <div class="drag-drop-zone" style="padding: 10px; min-height: auto; flex: 1; border: 1px dashed var(--deep-blue); cursor: pointer; text-align: center; border-radius: 4px; background: white;" onclick="document.getElementById('sermonEditInput-<%= sermon.id %>').click()" ondragover="event.preventDefault(); this.style.background='#f0f4f8';" ondrop="event.preventDefault(); this.style.background='white'; const file = event.dataTransfer.files[0]; if(file) { document.getElementById('sermonEditInput-<%= sermon.id %>').files = event.dataTransfer.files; this.querySelector('span').textContent = 'Selected: ' + file.name; }">
+                      <i class='bx bx-cloud-upload' style="font-size: 1.2rem; margin-bottom:0;"></i> 
+                      <span style="font-size: 0.8rem; font-weight: 600;">Drag & Drop or Click to Upload Video</span>
+                      <input type="file" name="sermon_video" id="sermonEditInput-<%= sermon.id %>" accept="video/*" style="display:none;" onchange="this.parentElement.querySelector('span').textContent = 'Selected: ' + this.files[0].name;">
+                    </div>
+                    <button type="submit" class="btn-save" style="padding: 6px 16px; font-weight: 600;">Save</button>
+                    <button type="button" class="btn-delete" style="padding: 6px 16px;" onclick="document.getElementById('edit-sermon-<%= sermon.id %>').style.display='none'">Cancel</button>
+                  </div>
                 </form>
               </td>
             </tr>

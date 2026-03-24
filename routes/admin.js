@@ -133,9 +133,15 @@ module.exports = function(upload) {
     res.redirect('/admin?msg=Sermon Added');
   });
 
-  router.post('/sermons/edit/:id', isAuthenticated, async (req, res) => {
+  router.post('/sermons/edit/:id', isAuthenticated, upload.single('sermon_video'), async (req, res) => {
     const { title, description, video_url } = req.body || {};
-    await supabase.from('sermons').update({ title, description, video_url }).eq('id', req.params.id);
+    const updateData = { title, description };
+    if (req.file) {
+      updateData.video_url = '/images/' + req.file.filename;
+    } else if (video_url !== undefined) {
+      updateData.video_url = video_url;
+    }
+    await supabase.from('sermons').update(updateData).eq('id', req.params.id);
     res.redirect('/admin?msg=Sermon Updated');
   });
 
