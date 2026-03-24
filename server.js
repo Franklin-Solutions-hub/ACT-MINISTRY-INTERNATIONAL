@@ -111,7 +111,27 @@ app.get('/leadership', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 8080;
+// --- SERMONS PAGE ---
+app.get('/sermons', async (req, res) => {
+  try {
+    const data = {};
+    // Fetch settings for navbar/footer
+    const { data: settingsRows } = await supabase.from('settings').select('key, value');
+    data.settings = {};
+    (settingsRows || []).forEach(row => data.settings[row.key] = row.value);
+
+    // Fetch sermons
+    const { data: sermons } = await supabase.from('sermons').select('*');
+    data.sermons = sermons || [];
+
+    res.render('sermons', { data });
+  } catch (err) {
+    console.error('Sermons page error:', err);
+    res.status(500).send('Database Error');
+  }
+});
+
+const PORT = процесс.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

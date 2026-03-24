@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Watch sermons, prophetic encounters, and teachings from ACT Ministry International Church.">
+  <title>Sermons | ACT Ministry International</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="/images/church-logo.png" type="image/png">
+  <style> body { opacity: 0; transition: opacity 0.5s ease; } </style>
+</head>
+<body>
+
+  <!-- ====== NAVBAR ====== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <img src="/images/church-logo.png" alt="ACT Ministry Logo">
+        <div class="nav-logo-text">
+          ACT Ministry
+          <span>Apostolic Core Team Ministry Intl.</span>
+        </div>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="/#events">Events</a>
+        <a href="/#about">About</a>
+        <a href="/leadership">Leadership</a>
+        <a href="/#ministries">Ministries</a>
+        <a href="/#gallery">Gallery</a>
+        <a href="/sermons" class="active-link">Sermons</a>
+        <a href="/#donate">Give</a>
+        <a href="/#contact">Contact</a>
+        <a href="<%= data.settings.watch_live_link || 'https://www.youtube.com' %>" target="_blank" rel="noopener" class="nav-cta">
+          <i class='bx bx-play-circle'></i> Watch Live
+        </a>
+      </div>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </nav>
+
+  <!-- ====== SERMONS HERO ====== -->
+  <section class="leadership-hero" style="min-height: 40vh; padding-top: 100px;">
+    <div class="leadership-hero-bg">
+      <img src="/images/worship-flyer.png" alt="Background">
+    </div>
+    <div class="leadership-hero-overlay"></div>
+    <div class="container" style="position: relative; z-index: 2; text-align: center;">
+      <p class="section-subtitle reveal" style="color: var(--gold-light);">Sermons & Messages</p>
+      <h1 class="reveal" style="color: var(--white); font-size: clamp(2.5rem, 5vw, 4rem); font-family: var(--font-heading); margin-bottom: 15px;">Watch & Be Blessed</h1>
+      <p class="reveal" style="color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6;">
+        Experience the power of God through our documented worship services, prophetic encounters, and divine teachings.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====== SERMONS GRID ====== -->
+  <section class="sermons-section section" style="padding-top: 60px;">
+    <div class="container">
+      <div class="sermons-grid">
+        <% data.sermons.forEach(sermon => { %>
+        <div class="sermon-card reveal">
+          <div class="sermon-video">
+            <% if(sermon.video_url && sermon.video_url.startsWith('/images/')) { %>
+              <!-- Native Video Player for Direct Uploads -->
+              <video src="<%= encodeURI(sermon.video_url) %>" controls preload="metadata"></video>
+            <% } else if(sermon.video_url) { %>
+              <!-- YouTube Embed -->
+              <iframe src="<%= sermon.video_url %>" allowfullscreen></iframe>
+            <% } else { %>
+              <div class="sermon-placeholder">
+                <div class="sermon-placeholder-icon"><i class='bx bx-play'></i></div>
+                <p>Coming Soon</p>
+              </div>
+            <% } %>
+          </div>
+          <div class="sermon-info">
+            <h3><%= sermon.title %></h3>
+            <p><%= sermon.description %></p>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer" id="footer">
+    <div class="footer-main">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <img src="/images/church-logo.png" alt="Logo">
+              <div class="footer-logo-text">ACT Ministry<span>Apostolic Core Team</span></div>
+            </div>
+            <p class="footer-tagline">"Come and Experience the overflow of God's Power"</p>
+          </div>
+          <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul><li><a href="/">Home</a></li><li><a href="/#about">About</a></li><li><a href="/leadership">Leadership</a></li><li><a href="/sermons">Sermons</a></li></ul>
+          </div>
+          <div class="footer-col">
+            <h4>Contact</h4>
+            <ul>
+              <li><a href="tel:<%= data.settings.contact_phone1 %>"><%= data.settings.contact_phone1 %></a></li>
+              <li><a href="mailto:<%= data.settings.contact_email %>"><%= data.settings.contact_email %></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2025 ACT Ministry International Church. All rights reserved.</p>
+        <p>Designed with <span style="color: var(--magenta);">❤</span> for the Glory of God | Website Design by Franklin Tech Hub Solutions</p>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/<%= data.settings.contact_phone1.replace(/\s+/g, '') %>" target="_blank" class="whatsapp-float"><i class='bx bxl-whatsapp'></i></a>
+  <script src="/js/script.js"></script>
+</body>
+</html>
