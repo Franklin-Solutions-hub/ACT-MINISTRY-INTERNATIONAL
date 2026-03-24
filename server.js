@@ -87,7 +87,7 @@ app.post('/contact', async (req, res) => {
   res.json({ success: true, message: 'Message sent successfully' });
 });
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
