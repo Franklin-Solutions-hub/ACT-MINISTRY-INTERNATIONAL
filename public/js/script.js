@@ -155,19 +155,25 @@ function showNotification(message, type = 'success') {
   notification.style.cssText = `
     position: fixed;
     top: 100px;
-    right: 30px;
-    padding: 16px 28px;
+    right: 15px;
+    left: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 14px 20px;
     border-radius: 12px;
     color: #fff;
     font-family: 'Inter', sans-serif;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 500;
     z-index: 10000;
-    transform: translateX(120%);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
     box-shadow: 0 8px 30px rgba(0,0,0,0.2);
-    max-width: 350px;
+    max-width: 380px;
+    width: auto;
     backdrop-filter: blur(10px);
+    text-align: center;
   `;
 
   if (type === 'success') {
@@ -182,11 +188,13 @@ function showNotification(message, type = 'success') {
   document.body.appendChild(notification);
 
   requestAnimationFrame(() => {
-    notification.style.transform = 'translateX(0)';
+    notification.style.transform = 'translateY(0)';
+    notification.style.opacity = '1';
   });
 
   setTimeout(() => {
-    notification.style.transform = 'translateX(120%)';
+    notification.style.transform = 'translateY(-20px)';
+    notification.style.opacity = '0';
     setTimeout(() => notification.remove(), 400);
   }, 4000);
 }

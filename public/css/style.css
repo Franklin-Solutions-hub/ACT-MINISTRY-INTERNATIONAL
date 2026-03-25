@@ -1361,19 +1361,26 @@ ul { list-style: none; }
 }
 
 /* ==============================
-   RESPONSIVE DESIGN (Optimization)
+   RESPONSIVE DESIGN — All Devices
    ============================== */
+
+/* --- Tablet landscape & small desktops --- */
 @media (max-width: 1024px) {
   .hero-title { font-size: 4rem; }
   .about-grid, .event-grid { grid-template-columns: 1fr; gap: 40px; }
   .contact-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: repeat(2, 1fr); }
   .ministries-grid { grid-template-columns: repeat(2, 1fr); }
+  .sermons-grid { grid-template-columns: 1fr; }
 }
 
+/* --- Tablets & large phones (landscape) --- */
 @media (max-width: 768px) {
   .section { padding: 70px 0; }
+  .section-header { margin-bottom: 40px; }
+  .container { padding: 0 5%; }
 
+  /* ---- Navbar mobile menu ---- */
   .nav-links {
     position: fixed;
     top: 0;
@@ -1381,126 +1388,254 @@ ul { list-style: none; }
     width: 80%;
     max-width: 350px;
     height: 100vh;
+    height: 100dvh;
     background: rgba(10, 22, 40, 0.98);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
     flex-direction: column;
     align-items: flex-start;
-    padding: 100px 40px 40px;
-    gap: 20px;
+    padding: 100px 30px 40px;
+    gap: 6px;
     transition: var(--transition-slow);
     box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+    overscroll-behavior: contain;
+    overflow-y: auto;
   }
   .nav-links.active {
     right: 0;
   }
   .nav-links a {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     width: 100%;
-    padding: 10px 0;
+    padding: 12px 0;
     border-bottom: 1px solid rgba(255,255,255,0.06);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
-  .navbar .nav-cta { display: none; }
+  .navbar .nav-cta {
+    display: flex !important;
+    margin-top: 12px;
+    width: 100%;
+    justify-content: center;
+  }
   .hamburger {
     display: flex;
   }
 
-  .hero-title {
-    font-size: clamp(2.2rem, 8vw, 3.5rem);
-  }
-  .hero-subtitle { font-size: 1rem; }
+  /* ---- Hero ---- */
+  .hero-title { font-size: clamp(2.2rem, 8vw, 3.5rem); }
+  .hero-subtitle { font-size: 0.95rem; letter-spacing: 1px; }
+  .hero-badge { font-size: 0.7rem; letter-spacing: 1px; padding: 6px 14px; }
+  .hero-buttons { flex-direction: column; gap: 10px; width: 100%; max-width: 300px; margin: 0 auto; }
+  .hero-scroll { bottom: 20px; }
+  .btn { width: 100%; justify-content: center; }
 
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
+  /* ---- About ---- */
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-image img { height: 350px; }
+  .about-image-badge {
+    position: relative;
+    bottom: auto; right: auto;
+    margin-top: -20px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 280px;
   }
-  .about-image img {
-    height: 400px;
-  }
-  .about-features {
-    grid-template-columns: 1fr;
-  }
+  .about-content h3 { font-size: 1.6rem; }
+  .about-features { grid-template-columns: 1fr 1fr; }
 
-  .ministries-grid {
-    grid-template-columns: 1fr;
-    max-width: 400px;
-    margin: 0 auto;
-  }
+  /* ---- Ministries ---- */
+  .ministries-grid { grid-template-columns: 1fr; max-width: 450px; margin: 0 auto; }
+  .ministry-card { padding: 30px 24px; }
 
-  .gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  /* ---- Events ---- */
+  .event-grid { grid-template-columns: 1fr; gap: 30px; }
+  .event-card { padding: 22px; }
+  .event-card h3 { font-size: 1.15rem; }
 
-  .sermons-grid {
-    grid-template-columns: 1fr;
-  }
+  /* ---- Gallery ---- */
+  .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
-  .contact-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  
-  .contact-form-wrapper { padding: 30px 20px; }
+  /* ---- Sermons ---- */
+  .sermons-grid { grid-template-columns: 1fr; }
 
-  .donation-wrapper {
-    padding: 40px 24px;
-  }
-  .donation-amounts { flex-wrap: wrap; justify-content: center; }
+  /* ---- Donation ---- */
+  .donation-wrapper { padding: 40px 24px; border-radius: var(--radius-lg); }
+  .donation-amounts { flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .donation-amount { padding: 10px 20px; font-size: 0.9rem; }
+  .donation-icon { width: 60px; height: 60px; font-size: 1.5rem; }
 
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
+  /* ---- Contact ---- */
+  .contact-grid { grid-template-columns: 1fr; gap: 30px; }
+  .contact-form-wrapper { padding: 28px 20px; }
+  .contact-map { height: 200px; }
+  .contact-info-card:hover { transform: none; }
+
+  /* ---- Footer ---- */
+  .footer-main { padding: 50px 0 30px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 30px; }
+  .footer-brand { max-width: 100%; }
   .footer-bottom .container {
     flex-direction: column;
     gap: 8px;
     text-align: center;
   }
-  
-  /* Mobile padding tweaks for better readability */
-  .container { padding: 0 5%; }
-  .btn { width: 100%; justify-content: center; margin-bottom: 15px; }
-  .hero-buttons { flex-direction: column; gap: 10px; width: 100%; max-width: 300px; margin: 0 auto; }
+  .footer-bottom p { font-size: 0.75rem; line-height: 1.5; }
+
+  /* ---- WhatsApp ---- */
+  .whatsapp-float { width: 52px; height: 52px; font-size: 1.5rem; bottom: 20px; right: 20px; }
 }
 
+/* --- Standard phones (iPhone 12/13/14, Pixel, Galaxy S) --- */
 @media (max-width: 480px) {
   .section { padding: 50px 0; }
-  .section-title { font-size: 1.8rem; }
-  .hero-title { font-size: 2.5rem; }
+  .section-title { font-size: 1.7rem; }
+  .section-desc { font-size: 0.95rem; }
+  .section-subtitle { font-size: 0.75rem; letter-spacing: 2px; padding: 0 16px; }
+  .section-subtitle::before { left: -12px; width: 20px; }
+  .section-subtitle::after { right: -12px; width: 20px; }
 
-  .hero-buttons {
-    flex-direction: column;
+  /* ---- Hero ---- */
+  .hero-title { font-size: clamp(2rem, 10vw, 2.8rem); }
+  .hero-subtitle { font-size: 0.85rem; letter-spacing: 0.5px; margin-bottom: 28px; }
+  .hero-badge {
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    padding: 5px 12px;
+    text-align: center;
+    line-height: 1.4;
   }
-  .hero-buttons .btn {
-    width: 100%;
-    justify-content: center;
-  }
+  .hero-content { padding: 0 16px; }
+  .hero-buttons { max-width: 260px; }
+  .hero-buttons .btn { padding: 12px 20px; font-size: 0.85rem; }
 
-  .gallery-grid {
-    grid-template-columns: 1fr; /* Stack on mobile */
-  }
+  /* ---- About ---- */
+  .about-image img { height: 300px; }
+  .about-features { grid-template-columns: 1fr; gap: 10px; }
+  .about-feature { padding: 10px 12px; }
+  .about-content h3 { font-size: 1.4rem; }
+  .about-content p { font-size: 0.95rem; }
 
-  .event-card {
-    padding: 20px;
-  }
+  /* ---- Events ---- */
+  .event-card { padding: 18px; }
+  .event-card h3 { font-size: 1.1rem; }
+  .event-card p { font-size: 0.88rem; }
+  .event-card-icon { width: 42px; height: 42px; font-size: 1.2rem; }
 
-  .contact-form-wrapper {
-    padding: 24px;
-  }
+  /* ---- Gallery ---- */
+  .gallery-grid { grid-template-columns: 1fr; gap: 16px; }
+  .gallery-item { aspect-ratio: 4 / 3; }
 
+  /* ---- Ministries ---- */
+  .ministries-grid { max-width: 100%; }
+  .ministry-card { padding: 24px 18px; }
+  .ministry-icon { width: 64px; height: 64px; font-size: 1.6rem; }
+  .ministry-card h3 { font-size: 1.1rem; }
+  .ministry-card p { font-size: 0.85rem; }
+
+  /* ---- Donation ---- */
+  .donation-wrapper { padding: 30px 18px; }
+  .donation-content h2 { font-size: 1.6rem; }
+  .donation-content p { font-size: 0.95rem; margin-bottom: 20px; }
   .donation-amounts {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
   }
   .donation-amount {
-    width: 100%;
-    max-width: 200px;
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+    max-width: none;
     text-align: center;
-    padding: 10px 15px; font-size: 0.9rem;
+    padding: 10px 8px;
+    font-size: 0.85rem;
   }
-  
-  /* Larger touch targets on small mobiles */
-  input, textarea, .btn { padding: 15px; font-size: 1rem; }
+
+  /* ---- Contact ---- */
+  .contact-form-wrapper { padding: 24px 16px; }
+  .contact-form-wrapper h3 { font-size: 1.2rem; }
+  .contact-map { height: 180px; }
+  .contact-info-card { padding: 16px; }
+  .contact-info-icon { width: 44px; height: 44px; }
+
+  /* ---- Footer ---- */
+  .footer-main { padding: 40px 0 24px; }
+  .footer-col h4 { margin-bottom: 14px; font-size: 0.95rem; }
+  .footer-col a { font-size: 0.85rem; }
+  .footer-social a { width: 38px; height: 38px; font-size: 1rem; }
+
+  /* ---- Touch targets ---- */
+  input, textarea, select { padding: 14px; font-size: 1rem; min-height: 44px; }
+  .form-submit { padding: 14px; font-size: 0.95rem; min-height: 44px; }
+  .btn { padding: 13px 20px; font-size: 0.9rem; min-height: 44px; }
+  a[href^="tel"] { display: inline-block; min-height: 44px; line-height: 44px; }
+}
+
+/* --- Small phones (iPhone SE, Galaxy A series, 360px and under) --- */
+@media (max-width: 375px) {
+  .container { padding: 0 4%; }
+  .section { padding: 40px 0; }
+  .section-title { font-size: 1.5rem; }
+  .section-header { margin-bottom: 30px; }
+
+  /* ---- Navbar ---- */
+  .nav-logo img { width: 40px; height: 40px; }
+  .nav-logo-text { font-size: 1rem; }
+  .nav-logo-text span { font-size: 0.55rem; }
+  .nav-links { padding: 90px 24px 30px; }
+  .nav-links a { font-size: 0.95rem; padding: 10px 0; }
+
+  /* ---- Hero ---- */
+  .hero-title { font-size: clamp(1.8rem, 11vw, 2.4rem); }
+  .hero-subtitle { font-size: 0.78rem; }
+  .hero-badge { font-size: 0.6rem; padding: 4px 10px; margin-bottom: 16px; }
+  .hero-buttons { max-width: 240px; }
+  .hero-buttons .btn { padding: 11px 16px; font-size: 0.8rem; }
+
+  /* ---- About ---- */
+  .about-image img { height: 250px; }
+  .about-image-badge { padding: 14px 20px; max-width: 240px; }
+  .about-image-badge h4 { font-size: 0.95rem; }
+  .about-content h3 { font-size: 1.25rem; }
+  .about-content p { font-size: 0.9rem; line-height: 1.7; }
+
+  /* ---- Events ---- */
+  .event-card { padding: 16px; }
+  .event-card h3 { font-size: 1rem; }
+  .event-card p { font-size: 0.82rem; }
+
+  /* ---- Donation ---- */
+  .donation-wrapper { padding: 24px 14px; }
+  .donation-content h2 { font-size: 1.4rem; }
+  .donation-icon { width: 50px; height: 50px; font-size: 1.3rem; margin-bottom: 16px; }
+
+  /* ---- Contact ---- */
+  .contact-form-wrapper { padding: 20px 14px; }
+  .contact-info-text h4 { font-size: 0.9rem; }
+  .contact-info-text p { font-size: 0.82rem; }
+  .contact-map { height: 160px; }
+
+  /* ---- Footer ---- */
+  .footer-logo img { width: 42px; height: 42px; }
+  .footer-logo-text { font-size: 0.95rem; }
+  .footer-tagline { font-size: 0.9rem; }
+  .footer-bottom p { font-size: 0.7rem; }
+
+  /* ---- WhatsApp ---- */
+  .whatsapp-float { width: 48px; height: 48px; font-size: 1.4rem; bottom: 16px; right: 16px; }
+}
+
+/* --- Landscape mode on phones --- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero { min-height: 100vh; min-height: 100dvh; }
+  .hero-content { padding: 0 10%; }
+  .hero-title { font-size: 2rem; margin-bottom: 12px; }
+  .hero-subtitle { margin-bottom: 20px; font-size: 0.85rem; }
+  .hero-badge { margin-bottom: 12px; }
+  .hero-scroll { display: none; }
+  .section { padding: 50px 0; }
+  .nav-links { padding-top: 70px; }
 }
 
 /* ===== LEADERSHIP PAGE ===== */

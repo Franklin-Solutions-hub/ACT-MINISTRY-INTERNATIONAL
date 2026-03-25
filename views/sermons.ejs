@@ -55,7 +55,7 @@
       <!-- HERO SEARCH BAR -->
       <div class="sermon-search-container reveal" style="max-width: 600px; margin: 0 auto; position: relative;">
         <i class='bx bx-search' style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); font-size: 1.5rem; color: var(--deep-blue); z-index: 10;"></i>
-        <input type="text" id="sermonSearchInput" placeholder="Search sermons by title or topic..." style="width: 100%; padding: 18px 20px 18px 60px; border-radius: 30px; border: none; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); outline: none; transition: transform 0.3s ease;" onfocus="this.style.transform='scale(1.02)'" onblur="this.style.transform='scale(1)'" onkeyup="filterSermons()">
+        <input type="text" id="sermonSearchInput" placeholder="Search sermons by title or topic..." style="width: 100%; padding: 16px 20px 16px 55px; border-radius: 30px; border: none; font-size: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); outline: none; transition: transform 0.3s ease; max-width: 100%; box-sizing: border-box;" onfocus="this.style.transform='scale(1.02)'" onblur="this.style.transform='scale(1)'" onkeyup="filterSermons()">
       </div>
     </div>
   </section>
@@ -70,7 +70,7 @@
         <h2 class="section-title">Featured Message</h2>
       </div>
       <div class="featured-sermon-card reveal" style="display: flex; flex-wrap: wrap; background: var(--white); border-radius: 16px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.08);">
-        <div class="featured-media" style="flex: 1; min-width: 300px; position: relative; min-height: 350px;">
+        <div class="featured-media" style="flex: 1; min-width: 240px; position: relative; min-height: 300px;">
           <% if(featuredSermon.thumbnail_url) { %>
             <img src="<%= featuredSermon.thumbnail_url %>" alt="<%= featuredSermon.title %>" style="width: 100%; height: 100%; object-fit: cover;">
             <a href="/sermons/<%= featuredSermon.id %>" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(30,30,100,0.85); color: white; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; transition: transform 0.3s ease, background 0.3s ease;" onmouseover="this.style.transform='translate(-50%, -50%) scale(1.1)'; this.style.background='var(--magenta)';" onmouseout="this.style.transform='translate(-50%, -50%) scale(1)'; this.style.background='rgba(30,30,100,0.85)';"><i class='bx bx-play'></i></a>
@@ -81,7 +81,7 @@
             </div>
           <% } %>
         </div>
-        <div class="featured-content" style="flex: 1; min-width: 300px; padding: 50px 40px; display: flex; flex-direction: column; justify-content: center;">
+        <div class="featured-content" style="flex: 1; min-width: 240px; padding: 30px 20px; display: flex; flex-direction: column; justify-content: center;">
           <div style="display:flex; justify-content:space-between; margin-bottom: 15px; align-items: center;">
             <span style="background: rgba(214, 51, 132, 0.1); color: var(--magenta); padding: 5px 12px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;"><%= featuredSermon.category || 'General' %></span>
             <span style="color: var(--gray); font-size: 0.9rem; font-weight: 500;"><i class='bx bx-calendar'></i> <%= featuredSermon.date_preached ? new Date(featuredSermon.date_preached).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) : 'Recent' %></span>
@@ -119,7 +119,7 @@
       </div>
 
       <!-- ====== SERMONS GRID ====== -->
-      <div class="sermon-premium-grid" id="sermonsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px;">
+      <div class="sermon-premium-grid" id="sermonsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px;">
         <% data.sermons.forEach(sermon => { %>
         <div class="sermon-premium-card reveal" data-title="<%= sermon.title.toLowerCase() %>" data-preacher="<%= (sermon.preacher||'').toLowerCase() %>" data-category="<%= sermon.category || 'General' %>">
           <a href="/sermons/<%= sermon.id %>" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; height: 100%; border-radius: 12px; border: 1px solid #eaeaea; background: white; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-10px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
