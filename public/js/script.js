@@ -96,56 +96,56 @@ if (contactForm) {
     const btn = contactForm.querySelector('button');
     const originalText = btn.innerHTML;
     btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Sending...";
-    
+
     const data = {
-        name: name,
-        email: email,
-        message: message
+      name: name,
+      email: email,
+      message: message
     };
 
     fetch('/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     })
-    .then(async res => {
+      .then(async res => {
         if (!res.ok) {
-            // Try to parse error as JSON, fallback to text if it's an HTML error page like 404
-            let errMessage = 'Failed to send message.';
-            try {
-                const errorData = await res.json();
-                errMessage = errorData.error || errMessage;
-            } catch (e) {
-                // Not JSON, perhaps 404
-                if (res.status === 404) errMessage = 'Server route not found. Is the server updated?';
-            }
-            throw new Error(errMessage);
+          // Try to parse error as JSON, fallback to text if it's an HTML error page like 404
+          let errMessage = 'Failed to send message.';
+          try {
+            const errorData = await res.json();
+            errMessage = errorData.error || errMessage;
+          } catch (e) {
+            // Not JSON, perhaps 404
+            if (res.status === 404) errMessage = 'Server route not found. Is the server updated?';
+          }
+          throw new Error(errMessage);
         }
         return res.json();
-    })
-    .then(data => {
-        if(data.success) {
-            btn.innerHTML = "<i class='bx bx-check'></i> Sent Successfully!";
-            btn.style.background = "#28a745";
-            contactForm.reset();
-            showNotification('Thank you for your message! We will get back to you soon.', 'success');
+      })
+      .then(data => {
+        if (data.success) {
+          btn.innerHTML = "<i class='bx bx-check'></i> Sent Successfully!";
+          btn.style.background = "#28a745";
+          contactForm.reset();
+          showNotification('Thank you for your message! We will get back to you soon.', 'success');
         } else {
-            throw new Error(data.error || 'Failed to send message.');
+          throw new Error(data.error || 'Failed to send message.');
         }
         setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.style.background = "";
+          btn.innerHTML = originalText;
+          btn.style.background = "";
         }, 3000);
-    })
-    .catch(err => {
+      })
+      .catch(err => {
         btn.innerHTML = "<i class='bx bx-x'></i> Error";
         btn.style.background = "#dc3545";
         showNotification(err.message, 'error');
         setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.style.background = "";
+          btn.innerHTML = originalText;
+          btn.style.background = "";
         }, 3000);
-    });
+      });
   });
 }
 
